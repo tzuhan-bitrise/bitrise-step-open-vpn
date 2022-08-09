@@ -3,15 +3,32 @@ title: |-
 summary: |
   Establish a VPN connection with the specified OpenVPN server.
 description: |
-  Before using this step, you need to build an OpenVPN server in advance.
-  This article is helpful for how to construct OpenVPN server.
-  https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-18-04
+  The Step establishes a VPN connection with the specified OpenVPN server.
 
+  ### Configuring the Step
 
-  After building the VPN server, you need to register the contents of CA certificate, client certificate, client private key, base64 encoded as Bitrise Secret.
-  You can easily retrieve the contents of Base64 with the following command.
+  Before you start:
+  1. Build an OpenVPN server. You can read [this article](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-18-04) on how to construct an OpenVPN server.
+  1. Register the contents of CA certificate, client certificate, client private key, base64 encoded as Bitrise Secrets.
+     You can easily retrieve the contents of Base64 using command: `$ base64 <certificate or private key file path>`
 
-  `$ base64 <certificate or private key file path>`
+  To configure the Step:
+
+  1. Add the OpenVPN server IP or hostname to the **Host** input.
+  1. Add the OpenVPN server port number to the **Port** input. The port number is `1194` by default.
+  1. Specify the OpenVPN server protocol in the **Protocol** input.
+  1. Add the CA certificate, client certificate, and client private key Secrets to their respective inputs.
+
+  ### Useful links
+
+  * [Using the Connect to OpenVPN Server Step](https://devcenter.bitrise.io/en/builds/connecting-to-a-vpn-during-a-build.html#using-the-connect-to-openvpn-server-step)
+  * [How To Set Up an OpenVPN Server](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-18-04)
+  * [Configuring network access for Bitrise build machines](https://devcenter.bitrise.io/en/infrastructure/build-machines/configuring-your-network-to-access-our-build-machines.html)
+
+  ### Related Steps
+
+  * [Cisco VPN connect](https://www.bitrise.io/integrations/steps/vpnc-connect)
+
 website: https://github.com/bitrise-steplib/bitrise-step-open-vpn
 source_code_url: https://github.com/bitrise-steplib/bitrise-step-open-vpn
 support_url: https://github.com/bitrise-steplib/bitrise-step-open-vpn/issues
