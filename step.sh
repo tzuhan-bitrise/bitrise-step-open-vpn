@@ -10,7 +10,9 @@ echo "client_crt: $(if [ ! -z "$client_crt" ]; then echo "***"; fi)"
 echo "client_key: $(if [ ! -z "$client_key" ]; then echo "***"; fi)"
 echo ""
 
-log_path=$(mktemp)
+#log_path=$(mktemp)
+touch /tmp/openvpn.log
+log_path=/tmp/openvpn.log
 
 envman add --key "OPENVPN_LOG_PATH" --value "$log_path"
 echo "Log path exported (\$OPENVPN_LOG_PATH=$log_path)"
@@ -22,7 +24,7 @@ case "$OSTYPE" in
 
     echo ${ca_crt} | base64 -d > /etc/openvpn/ca.crt
     echo ${client_crt} | base64 -d > /etc/openvpn/client.crt
-    echo ${client_key} | base64 -d > /etc/openvpn/client.key
+    echo ${client_key} | base64 -d > /etc/openvpn/client1.key
 
     cat <<EOF > /etc/openvpn/client.conf
 client
@@ -35,11 +37,12 @@ persist-key
 persist-tun
 comp-lzo
 verb 3
-ca ca.crt
-cert client.crt
-key client.key
+ca /etc/openvpn/ca.crt
+cert /etc/openvpn/client.crt
+key /etc/openvpn/client1.key
 EOF
 
+    cat /etc/openvpn/client.conf
     echo ""
     echo "Run openvpn"
         service openvpn start client > $log_path 2>&1
@@ -49,9 +52,7 @@ EOF
 
     echo "Check status"
     sleep 5
-    if ! ifconfig ; then
-        echo "ifconfig is False"
-    fi
+    ifconfig
     if ! ifconfig | grep tun0 > /dev/null ; then
         echo "No open VPN tunnel found"
         cat "$log_path"
