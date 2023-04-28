@@ -42,16 +42,20 @@ EOF
 
     echo ""
     echo "Run openvpn"
-      service openvpn start client > $log_path 2>&1
+        service openvpn start client > $log_path 2>&1
+
     echo "Done"
     echo ""
 
     echo "Check status"
     sleep 5
+    if ! ifconfig ; then
+        echo "ifconfig is False"
+    fi
     if ! ifconfig | grep tun0 > /dev/null ; then
-      echo "No open VPN tunnel found"
-      cat "$log_path"
-      exit 1
+        echo "No open VPN tunnel found"
+        cat "$log_path"
+        exit 1
     fi
     echo "Done"
     ;;
@@ -64,16 +68,16 @@ EOF
     echo ""
 
     echo "Run openvpn"
-      sudo openvpn --client --dev tun --proto ${proto} --remote ${host} ${port} --resolv-retry infinite --nobind --persist-key --persist-tun --comp-lzo --verb 3 --ca ca.crt --cert client.crt --key client.key > $log_path 2>&1 &
+        sudo openvpn --client --dev tun --proto ${proto} --remote ${host} ${port} --resolv-retry infinite --nobind --persist-key --persist-tun --comp-lzo --verb 3 --ca ca.crt --cert client.crt --key client.key > $log_path 2>&1 &
     echo "Done"
     echo ""
 
     echo "Check status"
     sleep 5
     if ! ps -p $! >&-; then
-      echo "Process exited"
-      cat "$log_path"
-      exit 1
+        echo "Process exited"
+        cat "$log_path"
+        exit 1
     fi
     echo "Done"
     ;;
